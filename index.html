@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hello Bulma!</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.2/css/bulma.min.css">
+  <script src="https://code.jquery.com/jquery-3.5.0.min.js"
+    integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ=" crossorigin="anonymous"></script>
+</head>
+
+<body>
+
+  <section class="hero is-link is-fullheight">
+    <div class="hero-body">
+      <div class="container">
+        <p class="top"></p>
+        <p class="available-top"></p>
+        <hr>
+        <p class="bottom"></p>
+        <p class="available-bottom"></p>
+      </div>
+    </div>
+  </section>
+
+
+  <script>
+    var settings = {
+      "url": "https://for-love-lemons.myshopify.com/api/graphql.json",
+      "method": "POST",
+      "timeout": 0,
+      "headers": {
+        "x-shopify-storefront-access-token": "ed432f9b5e38434f42b0f5538b5510da",
+        "Content-Type": "application/json",
+        "Cookie": "__cfduid=d9e56000654e5752e7f5ec4ac078be3de1587310457"
+      },
+      "data": JSON.stringify({
+        query: "{\n\tproducts(query: \"Posie Sleep\", first: 30 ) {\n\t\tedges {\n\t\t\tnode {\n\t\t\t\tavailableForSale\n\t\t\t\ttitle\n\t\t\t\t\n\t\t\t}\n\t\t}\n\t}\n}",
+        variables: {}
+      })
+    };
+
+    setTimeout(function () {
+      $.ajax(settings).done(function (response) {
+
+        var top_title = response.data.products.edges[0].node.title;
+        var top_availability = response.data.products.edges[0].node.availableForSale;
+
+        var bottom_title = response.data.products.edges[1].node.title;
+        var bottom_availability = response.data.products.edges[1].node.availableForSale;
+
+        $('.top').text(top_title);
+        $('.bottom').text(bottom_title);
+
+
+        if (top_availability === false) {
+          $('.available-top').text('Pas en stock =(');
+        }
+
+        if (bottom_availability === false) {
+          $('.available-bottom').text('Pas en stock =(');
+        }
+
+      });
+    }, 5000);
+  </script>
+
+</body>
+
+</html>
